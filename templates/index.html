@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Overview · Application Review Desk{% endblock %}
+{% block content %}
+<section class="welcome-row">
+  <div>
+    <p class="eyebrow"><span class="eyebrow-dot"></span> REGULATION WORKSPACE <span class="eyebrow-separator">/</span> OVERVIEW</p>
+    <h1>Good to see you.</h1>
+    <p class="welcome-subtitle">A clear view of submitted applications, document checks and items that need attention.</p>
+  </div>
+  <a class="button button-primary welcome-action" href="{{ url_for('submit') }}"><span aria-hidden="true">＋</span> Start a validation</a>
+</section>
+
+<section class="metrics" aria-label="Application summary">
+  <article class="metric-card metric-total">
+    <div class="metric-top"><span class="metric-label">Applications received</span><span class="metric-icon icon-navy">▤</span></div>
+    <div class="metric-value">{{ stats.total }}</div>
+    <div class="metric-foot"><span class="metric-dot navy-dot"></span> All submissions in this demo</div>
+  </article>
+  <article class="metric-card">
+    <div class="metric-top"><span class="metric-label">Needs review</span><span class="metric-icon icon-amber">!</span></div>
+    <div class="metric-value">{{ stats.review }}</div>
+    <div class="metric-foot"><span class="metric-dot amber-dot"></span> One or more findings recorded</div>
+  </article>
+  <article class="metric-card">
+    <div class="metric-top"><span class="metric-label">Initial checks passed</span><span class="metric-icon icon-green">✓</span></div>
+    <div class="metric-value">{{ stats.['clear'] }}</div>
+    <div class="metric-foot"><span class="metric-dot green-dot"></span> No issues found by current rules</div>
+  </article>
+</section>
+
+<section class="content-panel">
+  <div class="section-heading">
+    <div><p class="section-kicker">APPLICATION REGISTER</p><h2>Recent applications</h2><p class="section-description">Review the latest submissions and open their evidence report.</p></div>
+    <span class="record-count">{{ applications|length }} record{% if applications|length != 1 %}s{% endif %}</span>
+  </div>
+  {% if applications %}
+  <div class="table-tools">
+    <label class="search-field"><span aria-hidden="true">⌕</span><input id="applicationSearch" type="search" placeholder="Search institution or application ID…" aria-label="Search applications"></label>
+    <span class="table-note">Newest submissions first</span>
+  </div>
+  <div class="table-wrap"><table id="applicationTable"><thead><tr><th>Application</th><th>Institution</th><th>Application category</th><th>Files</th><th>Initial status</th><th><span class="sr-only">Open report</span></th></tr></thead><tbody>
+  {% for a in applications %}
+  <tr data-search="{{ (a.id ~ ' ' ~ a.institution_name ~ ' ' ~ a.application_category)|lower }}">
+    <td><a class="application-id" href="{{ url_for('detail', app_id=a.id) }}">{{ a.id }}</a><span class="cell-sub">{{ a.created_at[:10] }}</span></td>
+    <td><span class="institution-name">{{ a.institution_name }}</span><span class="cell-sub">Institution submission</span></td>
+    <td><span class="category-text">{{ a.application_category }}</span></td>
+    <td><span class="file-count">{{ a.documents|length }}</span></td>
+    <td><span class="status {{ 'status-review' if a.overall_status == 'Review required' else 'status-clear' }}"><span class="status-dot"></span>{{ a.overall_status }}</span></td>
+    <td><a class="view-link" href="{{ url_for('detail', app_id=a.id) }}">View report <span aria-hidden="true">↗</span></a></td>
+  </tr>
+  {% endfor %}
+  </tbody></table><div id="noSearchResults" class="no-results" hidden>No applications match your search.</div></div>
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-illustration"><span class="paper-icon">▤</span><span class="empty-plus">＋</span></div>
+    <h3>Your application register is empty</h3>
+    <p>Start with a fictional test application to see the validation process in action.</p>
+    <a class="button button-primary" href="{{ url_for('submit') }}">Create first application <span aria-hidden="true">→</span></a>
+  </div>
+  {% endif %}
+</section>
+
+<section class="bottom-note"><span class="bottom-note-icon">✓</span><p><strong>Designed for assisted review.</strong> The system highlights missing details and discrepancies; it does not determine authenticity or make approval decisions.</p></section>
+<script>
+(function () {
+  const input = document.getElementById('applicationSearch');
+  const table = document.getElementById('applicationTable');
+  const empty = document.getElementById('noSearchResults');
+  if (!input || !table) return;
+  input.addEventListener('input', function () {
+    const query = input.value.trim().toLowerCase();
+    let visible = 0;
+    table.querySelectorAll('tbody tr').forEach(function (row) {
+      const match = (row.dataset.search || '').includes(query);
+      row.hidden = !match;
+      if (match) visible += 1;
+    });
+    empty.hidden = visible !== 0;
+  });
+})();
+</script>
+{% endblock %}

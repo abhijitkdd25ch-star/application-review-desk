@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}New application · Validation Assistant{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">INTAKE</p><h1>Submit a demo application</h1><p class="muted">Use fictional data only. For this starter version, the metadata fields below apply to every file in this submission.</p></div></section>
+<form class="panel form-panel" method="post" enctype="multipart/form-data">
+  <div class="form-grid">
+    <label>Institution name <input name="institution_name" required maxlength="200" placeholder="e.g. ABC Engineering College"></label>
+    <label>Application category <select name="application_category">{% for item in categories %}<option>{{ item }}</option>{% endfor %}</select></label>
+    <label>Document type <select name="document_type"><option value="">Choose document type</option>{% for item in document_types %}<option>{{ item }}</option>{% endfor %}</select></label>
+    <label>Reference / certificate number <input name="reference_number" maxlength="100" placeholder="e.g. CERT12345"></label>
+    <label>Issue date <input type="date" name="issue_date"></label>
+    <label>Expiry date <input type="date" name="expiry_date"></label>
+  </div>
+  <label class="upload-box">Documents (PDF, PNG, JPG, JPEG) <input type="file" name="documents" accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg" multiple required><small>Maximum 10 files, 10 MB each (25 MB total per submission). The prototype checks the filename extension, size, hash, entered metadata, dates and fictional reference records. It does not prove authenticity.</small></label>
+  <div class="form-actions"><a class="button secondary" href="{{ url_for('index') }}">Cancel</a><button class="button" type="submit">Run initial validation →</button></div>
+</form>
+{% endblock %}

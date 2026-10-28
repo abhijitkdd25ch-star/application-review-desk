@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173b63">
+  <title>{% block title %}AICTE | Application Review Desk{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('index') }}" aria-label="Application Review Desk home">
+    <span class="brand-mark"><span>AR</span></span>
+    <span class="brand-copy"><strong>Application Review Desk</strong><small>Institutional validation workspace</small></span>
+  </a>
+  <nav class="main-nav">
+    <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Overview</a>
+    <a class="nav-link {% if request.endpoint == 'submit' %}active{% endif %}" href="{{ url_for('submit') }}">Applications</a>
+    <a class="button button-primary nav-cta" href="{{ url_for('submit') }}"><span aria-hidden="true">＋</span> New application</a>
+  </nav>
+</header>
+<main class="container">
+  <div class="demo-notice"><span class="notice-mark">i</span><div><strong>Demonstration environment</strong><span>Uses fictional records only. Findings are advisory and require human review; this is not an official AICTE service.</span></div></div>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}{% for category, message in messages %}<div class="flash {{ category }}" role="status">{{ message }}</div>{% endfor %}{% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="site-footer"><span class="footer-brand">Application Review Desk</span><span>SIH prototype · Preliminary checks only · Final decisions remain with authorized officials</span></footer>
+</body>
+</html>

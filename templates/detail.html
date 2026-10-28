@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ application.id }} · Validation Assistant{% endblock %}
+{% block content %}
+<section class="page-heading"><div><p class="eyebrow">VALIDATION REPORT</p><h1>{{ application.institution_name }}</h1><p class="muted">{{ application.id }} · {{ application.application_category }} · {{ application.created_at[:19].replace('T',' ') }} UTC</p></div><span class="status large {{ 'warn' if application.overall_status == 'Review required' else 'ok' }}">{{ application.overall_status }}</span></section>
+<div class="summary-grid"><div class="summary-card"><span>Documents processed</span><strong>{{ application.documents|length }}</strong></div><div class="summary-card"><span>Total findings</span><strong>{{ application.total_findings }}</strong></div><div class="summary-card"><span>Verification model</span><strong>Synthetic test data</strong></div></div>
+{% for d in application.documents %}
+<section class="panel doc-panel">
+  <div class="panel-head"><div><p class="eyebrow">DOCUMENT {{ loop.index }}</p><h2>{{ d.filename }}</h2></div><span class="pill">{{ d.verification_status }}</span></div>
+  <div class="details-grid"><div><span>Type</span><strong>{{ d.document_type or 'Not provided' }}</strong></div><div><span>Reference number</span><strong>{{ d.reference_number or 'Not provided' }}</strong></div><div><span>Issue date</span><strong>{{ d.issue_date or 'Not provided' }}</strong></div><div><span>Expiry date</span><strong>{{ d.expiry_date or 'Not provided' }}</strong></div></div>
+  {% if d.sha256 %}<p class="muted">File size: {{ (d.size_bytes / 1024)|round(1) }} KB · SHA-256: <span class="mono">{{ d.sha256[:20] }}…</span></p>{% endif %}
+  {% if d.stored_name %}<p><a href="{{ url_for('uploaded_file', filename=d.stored_name) }}" target="_blank" rel="noopener">Open uploaded file ↗</a></p>{% endif %}
+  <h3>Findings and evidence</h3>
+  {% if d.findings %}<ul class="findings">{% for f in d.findings %}<li class="{{ f.level }}"><strong>{{ f.code.replace('_',' ') }}</strong><p>{{ f.message }}</p>{% if f.evidence %}<details><summary>View comparison evidence</summary><pre>{{ f.evidence|tojson(indent=2) }}</pre></details>{% endif %}</li>{% endfor %}</ul>
+  {% else %}<p class="good-text">No issues detected by the prototype rules. This does not constitute regulatory approval or prove document authenticity.</p>{% endif %}
+</section>
+{% endfor %}
+<section class="panel">
+  <h2>Human review note</h2><p class="muted">Record a demo review action. This is not an official regulatory decision.</p>
+  {% if application.review_note %}<div class="review-note">{{ application.review_note }}</div>{% endif %}
+  <form method="post" action="{{ url_for('mark_reviewed', app_id=application.id) }}" class="review-form"><textarea name="review_note" rows="3" maxlength="2000" placeholder="e.g. Please obtain the original certificate for manual verification."></textarea><button class="button" type="submit">Save review note</button></form>
+</section>
+<section class="panel"><h2>Audit history</h2><ul class="timeline">{% for item in application.audit_log %}<li><strong>{{ item.action }}</strong><span>{{ item.timestamp }}</span><p>{{ item.details }}</p></li>{% endfor %}</ul></section>
+<a href="{{ url_for('index') }}" class="back-link">← Back to dashboard</a>
+{% endblock %}

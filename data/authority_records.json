@@ -1,0 +1,26 @@
+[
+  {
+    "reference_number": "CERT12345",
+    "institution_name": "ABC Engineering College",
+    "document_type": "Accreditation Certificate",
+    "issue_date": "2024-01-10",
+    "expiry_date": "2026-01-09",
+    "status": "valid_in_test_data"
+  },
+  {
+    "reference_number": "NOC67890",
+    "institution_name": "North Demo Institute",
+    "document_type": "NOC",
+    "issue_date": "2025-04-01",
+    "expiry_date": "2027-03-31",
+    "status": "valid_in_test_data"
+  },
+  {
+    "reference_number": "FAC11111",
+    "institution_name": "ABC Engineering College",
+    "document_type": "Faculty Certificate",
+    "issue_date": "2025-01-01",
+    "expiry_date": "2027-01-01",
+    "status": "valid_in_test_data"
+  }
+]

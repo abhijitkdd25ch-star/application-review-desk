@@ -1,0 +1,4 @@
+# Core dependencies only. OCR packages are optional and intentionally excluded
+# so the basic prototype can install without fetching heavy packages.
+Flask>=3.0,<4.0
+Werkzeug>=3.0,<4.0

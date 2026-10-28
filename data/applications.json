@@ -1,0 +1,43 @@
+[
+  {
+    "id": "DEMO-EDFDDF21",
+    "institution_name": "akjndskjzds",
+    "application_category": "Other approval-related change",
+    "created_at": "2026-10-28T16:45:33+00:00",
+    "documents": [
+      {
+        "filename": "NCERT_Class_10_History.pdf",
+        "stored_name": "DEMO-EDFDDF21_e57d7cdf_NCERT_Class_10_History.pdf",
+        "sha256": "6a51f22d26e4df71dd0f44df322c5acb45ef1c2d99ebb18a955d08bbafb70ec3",
+        "size_bytes": 228062,
+        "document_type": "NOC",
+        "reference_number": "jlihkcx",
+        "issue_date": "2026-10-23",
+        "expiry_date": "2026-10-27",
+        "verification_status": "Manual review required — no matching synthetic test record",
+        "findings": [
+          {
+            "level": "warning",
+            "code": "EXPIRED",
+            "message": "Expiry date 2026-10-27 is before today's date (2026-10-28)."
+          },
+          {
+            "level": "info",
+            "code": "NO_TEST_RECORD",
+            "message": "No matching record exists in the prototype's synthetic dataset. This does not mean the document is fake."
+          }
+        ]
+      }
+    ],
+    "audit_log": [
+      {
+        "timestamp": "2026-10-28T16:45:33+00:00",
+        "action": "Application submitted",
+        "details": "1 document(s) processed using local prototype rules."
+      }
+    ],
+    "notice": "Prototype only: synthetic records; not an official AICTE decision.",
+    "total_findings": 2,
+    "overall_status": "Review required"
+  }
+]
